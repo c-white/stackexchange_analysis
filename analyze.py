@@ -4,9 +4,9 @@
 Program for analyzing Stackexchange answers.
 
 Usage: Call this script from this directory:
-      ./analyze.py -q <quality_file> -v <votes_file>
+      ./analyze.py -q <quality_file> -v <votes_file> -o <output_file>
   Alternatively (and in the case of the Python interpreter being elsewhere), call this script via Python:
-      python analyze.py -q <quality_file> -v <votes_file>
+      python analyze.py -q <quality_file> -v <votes_file> -o <output_file>
 
 Notes:
   - Designed and tested on Python 2.7.
@@ -17,6 +17,11 @@ import numpy as np
 import argparse
 import csv
 
+# Python plotting modules
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+
 # Main function
 def main(**kwargs):
   
@@ -24,6 +29,10 @@ def main(**kwargs):
   data_quality = read_data('data/'+kwargs['quality'])
   data_votes = read_data('data/'+kwargs['votes'])
   quality,votes = sort_data(data_quality, data_votes)
+
+  # Plot data
+  plt.scatter(quality, votes)
+  plt.savefig('plots/'+kwargs['output'])
 
 # Function for reading in text file with data
 def read_data(filename):
@@ -54,5 +63,9 @@ if __name__ == '__main__':
       type=str,
       required=True,
       help='name of file in data/ holding votes information')
+  parser.add_argument('-o', '--output',
+      type=str,
+      required=True,
+      help='name of output image in plots/')
   args = parser.parse_args()
   main(**vars(args))
