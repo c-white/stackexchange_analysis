@@ -4,12 +4,24 @@
 Program for analyzing Stackexchange answers.
 
 Usage: Call this script from this directory:
-      ./analyze.py -a <answer_file> -q <quality_file> -o <output_file>
-  Alternatively (and in the case of the Python interpreter being elsewhere), call this script via Python:
-      python analyze.py -a <answer_file> -q <quality_file> -o <output_file>
+    ./analyze.py -a <answer_file> -q <quality_file>
+Alternatively (and in the case of the Python interpreter being elsewhere), call this script via Python:
+    python analyze.py -a <answer_file> -q <quality_file>
 
 Notes:
-  - Designed and tested on Python 2.7.
+  - Designed and tested on Python 2.7
+  - Creates/overwrites certain .png files in plots/ containing output visuals
+  - Should use query http://data.stackexchange.com/physics/query/273688/scores-for-my-answers
+    - Replace "physics" with another site if desired
+    - Enter UserID, or append "?UserId=<user_id>" to URL
+    - Run query
+    - Download csv to data/<answer_file>
+  - Should have matching quality data in data/<quality_file>
+    - File format:
+      - No header
+      - <answer_id><whitespace><quality_score>
+    - Quality score should be integer from 0 to 10 inclusive
+    - Quality score is a subjective measure of how good an answer is
 """
 
 # Python modules
@@ -33,7 +45,7 @@ def main(**kwargs):
 
   # Plot data
   plt.scatter(qualities, answer_scores)
-  plt.savefig('plots/'+kwargs['output'])
+  plt.savefig('plots/quality_votes.png')
 
 # Function for reading in quality data
 def read_quality(filename):
@@ -88,9 +100,5 @@ if __name__ == '__main__':
       type=str,
       required=True,
       help='name of whitespace-separated file in data/ holding quality information')
-  parser.add_argument('-o', '--output',
-      type=str,
-      required=True,
-      help='name of output image in plots/')
   args = parser.parse_args()
   main(**vars(args))
