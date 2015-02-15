@@ -1,6 +1,7 @@
 # Data files
+*.csv
 *.dat
 
 # Include mock data
+!mock_answers.csv
 !mock_quality.dat
-!mock_votes.dat
