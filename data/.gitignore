@@ -3,5 +3,5 @@
 *.dat
 
 # Include mock data
-!mock_answers.csv
-!mock_quality.dat
+!example_answer_data.csv
+!example_quality_data.dat
