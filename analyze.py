@@ -54,11 +54,13 @@ def main(**kwargs):
   bins_log = np.linspace(0.0, float(max_log_boundary_index), max_log_boundary_index+1)
   bins_log = 10.0**(bins_log / kwargs['intervals_per_decade'])
   bins_log = np.insert(bins_log, 0, min_score-0.5)
+  answer_scores_by_quality = []
   counts_lin = []
   counts_log = []
   max_counts_log = 0
   for quality in range(0,kwargs['max_quality']+1):
-    counts_lin_local,_ = np.histogram(answer_scores[np.where(qualities == quality)[0]], bins=bins_lin)
+    answer_scores_by_quality.append(answer_scores[np.where(qualities == quality)[0]])
+    counts_lin_local,_ = np.histogram(answer_scores_by_quality[quality], bins=bins_lin)
     counts_lin.append(counts_lin_local)
     counts_log_local = np.zeros(len(bins_log)-1)
     for i in range(len(counts_log_local)):
@@ -76,7 +78,34 @@ def main(**kwargs):
     counts_log.append(counts_log_local)
     max_counts_log = max(max_counts_log, max(counts_log_local))
 
-  # Plot data
+  # Analyze data
+  qualities = []
+  means = []
+  q1s = []
+  q2s = []
+  q3s = []
+  for quality in range(0,kwargs['max_quality']+1):
+    mean = np.mean(answer_scores_by_quality[quality])
+    q1 = np.percentile(answer_scores_by_quality[quality], 25.0)
+    q2 = np.percentile(answer_scores_by_quality[quality], 50.0)
+    q3 = np.percentile(answer_scores_by_quality[quality], 75.0)
+    qualities.append(quality)
+    means.append(mean)
+    q1s.append(q1)
+    q2s.append(q2)
+    q3s.append(q3)
+    print('Quality = {0}:'.format(quality))
+    print('    mean           = {0}'.format(mean))
+    print('    first quartile = {0}'.format(q1))
+    print('    median         = {0}'.format(q2))
+    print('    third quartile = {0}'.format(q3))
+  qualities = np.array(qualities)
+  means = np.array(means)
+  q1s = np.array(q1s)
+  q2s = np.array(q2s)
+  q3s = np.array(q3s)
+
+  # Plot histogram
   fig = plt.figure(figsize=(kwargs['fig_width'],kwargs['fig_height']))
   ax = fig.add_subplot(1, 1, 1)
   for axis in ['bottom', 'top', 'left', 'right']:
@@ -113,7 +142,18 @@ def main(**kwargs):
   ax.set_ylabel('Count', labelpad=kwargs['y_pad'])
   plt.tight_layout(w_pad=0.0, h_pad=0.0)
   fig.subplots_adjust(bottom=kwargs['bottom_margin'], left=kwargs['left_margin'])
-  plt.savefig(kwargs['output'])
+  plt.savefig(kwargs['output'][0])
+
+  # Plot trend
+  plt.figure()
+  plt.errorbar(qualities, means, (means-q1s,q3s-means), marker='o', color='k')
+  plt.xlim([-0.5, kwargs['max_quality']+0.5])
+  plt.xticks(np.arange(kwargs['max_quality']+1))
+  plt.tick_params(axis='x', direction='out', top='off')
+  plt.tick_params(axis='y', direction='out', right='off')
+  plt.xlabel('Quality')
+  plt.ylabel('Answer Score')
+  plt.savefig(kwargs['output'][1])
 
 # Function for reading in quality data
 def read_quality(filename):
@@ -170,8 +210,9 @@ if __name__ == '__main__':
       help='name of whitespace-separated file in data/ holding quality information')
   parser.add_argument('-o', '--output',
       type=str,
-      default='plots/histogram.png',
-      help='name of output histogram file')
+      nargs=2,
+      default=['plots/histogram.png', 'plots/trend.png'],
+      help='names of output files (histogram, then trend; must both be given if given at all)')
   parser.add_argument('--max_quality',
       type=int,
       default=5,
