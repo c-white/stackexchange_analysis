@@ -95,6 +95,7 @@ def main(**kwargs):
     q2s.append(q2)
     q3s.append(q3)
     print('Quality = {0}:'.format(quality))
+    print('    count          = {0}'.format(len(answer_scores_by_quality[quality])))
     print('    mean           = {0}'.format(mean))
     print('    first quartile = {0}'.format(q1))
     print('    median         = {0}'.format(q2))
