@@ -146,7 +146,7 @@ def main(**kwargs):
 
   # Plot trend
   plt.figure()
-  plt.errorbar(qualities, means, (means-q1s,q3s-means), marker='o', color='k')
+  plt.errorbar(qualities, means, (means-q1s,q3s-means), marker='o', linestyle='none', color='k')
   plt.xlim([-0.5, kwargs['max_quality']+0.5])
   plt.xticks(np.arange(kwargs['max_quality']+1))
   plt.tick_params(axis='x', direction='out', top='off')
