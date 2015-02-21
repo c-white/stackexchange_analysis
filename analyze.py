@@ -10,7 +10,7 @@ Alternatively (and in the case of the Python interpreter being elsewhere), call 
 
 Notes:
   - Designed and tested with Python 2.7 and Matplotlib 1.1.1 on OS X 10.7.5
-  - Creates/overwrites plots/histogram.png (by default)
+  - Creates/overwrites plots/histogram.png and plots/trend.png (by default)
   - Should use query http://data.stackexchange.com/physics/query/273688/scores-for-my-answers
     - Replace "physics" with another site if desired
     - Enter UserID, or append "?UserId=<user_id>" to URL
@@ -203,11 +203,11 @@ if __name__ == '__main__':
   parser.add_argument('-a', '--answers',
       type=str,
       required=True,
-      help='name of comma-separated file in data/ holding answer information')
+      help='name of comma-separated file holding answer information')
   parser.add_argument('-q', '--quality',
       type=str,
       required=True,
-      help='name of whitespace-separated file in data/ holding quality information')
+      help='name of whitespace-separated file holding quality information')
   parser.add_argument('-o', '--output',
       type=str,
       nargs=2,

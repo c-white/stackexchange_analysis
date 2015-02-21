@@ -1,1 +1,22 @@
-This is a program for analyzing one's Stackexchange answers, in particular the "quality" and the voted score.
+Stackexchange Analysis
+
+Author: Christopher J. White
+Date: February 2015
+
+This is a program for analyzing one's Stackexchange answers, in particular the
+"quality" and the voted score.
+
+Run the program analyze.py from this directory. See that file for instructions,
+or run as
+    ./analyze.py -h
+If the Python interpreter is not /usr/bin/python, call Python explicitly:
+    python analyze.py -h
+
+Before the program can produce meaningful output, one must gather data from
+    http://data.stackexchange.com/physics/query/273688/scores-for-my-answers
+(or use data/example_answer_data.csv for the author's personal answer history).
+One must also assign integer quality scores (recommended from 0 to 5 inclusive)
+to all answers manually, following the format of data/example_quality_data.dat.
+
+Data files (e.g. .csv, .dat) can be placed in the data/ directory. Plots (e.g.
+.png) can be placed in the plots/ directory.
